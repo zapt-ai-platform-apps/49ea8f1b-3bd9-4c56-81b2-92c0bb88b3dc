@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
+import App from '@/app/App';
+import '@/styles/global.css';
 import * as Sentry from '@sentry/browser';
+import { initializeModules } from '@/modules';
 
+// Initialize Sentry
 Sentry.init({
   dsn: import.meta.env.VITE_PUBLIC_SENTRY_DSN,
   environment: import.meta.env.VITE_PUBLIC_APP_ENV,
@@ -37,9 +39,13 @@ if (import.meta.env.VITE_PUBLIC_APP_ENV !== 'development') {
   document.head.appendChild(script);
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// Initialize modules
+initializeModules().then(() => {
+  // Render app after modules are initialized
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+});
